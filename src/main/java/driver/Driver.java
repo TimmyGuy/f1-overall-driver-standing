@@ -1,6 +1,6 @@
-package Driver;
+package driver;
 
-import Race.Race;
+import race.Race;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;

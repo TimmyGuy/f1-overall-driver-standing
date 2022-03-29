@@ -1,36 +1,37 @@
-import Driver.Driver;
+import driver.Driver;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class F1OverallDriverStanding {
-    static String apiHost = "http://ergast.com/api/f1/";
+    static final String apiHost = "https://ergast.com/api/f1/";
     static Scanner scanner = new Scanner(System.in);
 
 
-    public static void main(String[] args) throws UnirestException, IOException {
+    public static void main(String[] args) throws UnirestException {
 
         int choice = mainMenu();
         while (true) {
             switch (choice) {
-                case 1:
-                    driverInformation();
-                    break;
-                case 2:
-                    // Get all races
-
+                case 1 -> driverInformation();
+                case 2 -> raceInformation();
+                case 5 -> System.exit(0);
             }
         }
 
     }
 
-    private static void driverInformation() throws UnirestException, IOException {
+    private static void raceInformation() {
+        System.out.println();
+    }
+
+    private static void driverInformation() throws UnirestException {
         System.out.println("Typ het driverId in");
 
         String driverId = scanner.next();
         Driver driver = Driver.getDriver(apiHost, driverId);
+        System.out.println(driver);
     }
 
     static int mainMenu() {
@@ -41,6 +42,7 @@ public class F1OverallDriverStanding {
         System.out.println("2. Alle races");
         System.out.println("3. Vergelijk coureurs");
         System.out.println("4. Vergelijk races");
+        System.out.println("5. Sluit het programma af");
         System.out.print("Keuze: ");
 
         return scanner.nextInt();

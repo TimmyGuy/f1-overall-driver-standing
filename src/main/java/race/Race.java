@@ -1,8 +1,8 @@
-package Race;
+package race;
 
-import Circuit.Circuit;
-import Driver.Driver;
-import Result.Result;
+import circuit.Circuit;
+import driver.Driver;
+import result.Result;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -63,7 +63,7 @@ public class Race {
         if (races.length() == 0) return null;
 
         JSONObject race = races.getJSONObject(0);
-        JSONObject c = race.getJSONObject("Circuit");
+        JSONObject c = race.getJSONObject("circuit");
         JSONArray r = race.getJSONArray("Results");
 
         Circuit circuit = new Circuit(c.getString("circuitId"), c.getString("circuitName"), c.getJSONObject("Location").getString("country"));
@@ -77,7 +77,7 @@ public class Race {
                             result.getString("number"),
                             result.getString("position"),
                             result.getString("points"),
-                            Driver.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId")),
+                            Driver.getDriver(apiHost, result.getJSONObject("driver").getString("driverId")),
                             result.getString("status")
                     )
             );

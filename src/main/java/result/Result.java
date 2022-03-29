@@ -1,13 +1,13 @@
-package Result;
+package result;
 
-import Driver.Driver;
+import driver.Driver;
 
 public class Result {
-    private String number;
-    private String position;
-    private String points;
-    private Driver driver;
-    private String status;
+    private final String number;
+    private final String position;
+    private final String points;
+    private final Driver driver;
+    private final String status;
 
     public Result(String number, String position, String points, Driver driver, String status) {
         this.number = number;

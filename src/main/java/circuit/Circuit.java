@@ -1,4 +1,4 @@
-package Circuit;
+package circuit;
 
 public class Circuit {
     private final String circuitId;
