@@ -1,16 +1,24 @@
 package Race;
 
 import Circuit.Circuit;
+import Driver.Driver;
 import Result.Result;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class Race {
-    private int season;
-    private int round;
-    private Circuit circuit;
-    private String date;
-    private String time;
-    private ArrayList<Result> results;
+    private final int season;
+    private final int round;
+    private final Circuit circuit;
+    private final String date;
+    private final String time;
+    private final ArrayList<Result> results;
 
     public Race(int season, int round, Circuit circuit, String date, String time, ArrayList<Result> results) {
         this.season = season;
@@ -45,7 +53,43 @@ public class Race {
         return results;
     }
 
-    public static Race getRace() {
-        return null;
+    public static Race getRace(String apiHost, int season, int round) throws UnirestException {
+        String query = String.format(season + "/" + round + "/results.json", "UTF-8");
+        HttpResponse<JsonNode> response = Unirest.get(apiHost + query).asJson();
+
+        JSONObject json = response.getBody().getObject();
+        JSONArray races = json.getJSONObject("MRData").getJSONObject("RaceTable").getJSONArray("Races");
+
+        if (races.length() == 0) return null;
+
+        JSONObject race = races.getJSONObject(0);
+        JSONObject c = race.getJSONObject("Circuit");
+        JSONArray r = race.getJSONArray("Results");
+
+        Circuit circuit = new Circuit(c.getString("circuitId"), c.getString("circuitName"), c.getJSONObject("Location").getString("country"));
+
+        ArrayList<Result> results = new ArrayList<>();
+
+        for (int i = 0; i < r.length(); i++) {
+            JSONObject result = r.getJSONObject(i);
+            results.add(
+                    new Result(
+                            result.getString("number"),
+                            result.getString("position"),
+                            result.getString("points"),
+                            Driver.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId")),
+                            result.getString("status")
+                    )
+            );
+        }
+
+        return new Race(
+                season,
+                round,
+                circuit,
+                race.getString("date"),
+                race.getString("time"),
+                results
+                );
     }
 }

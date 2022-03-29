@@ -1,17 +1,17 @@
 package Circuit;
 
 public class Circuit {
-    private int circuitId;
-    private String circuitName;
-    private String country;
+    private final String circuitId;
+    private final String circuitName;
+    private final String country;
 
-    public Circuit(int circuitId, String circuitName, String country) {
+    public Circuit(String circuitId, String circuitName, String country) {
         this.circuitId = circuitId;
         this.circuitName = circuitName;
         this.country = country;
     }
 
-    public int getCircuitId() {
+    public String getCircuitId() {
         return circuitId;
     }
 
