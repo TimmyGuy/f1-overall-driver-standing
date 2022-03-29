@@ -63,7 +63,7 @@ public class Race {
         if (races.length() == 0) return null;
 
         JSONObject race = races.getJSONObject(0);
-        JSONObject c = race.getJSONObject("circuit");
+        JSONObject c = race.getJSONObject("Circuit");
         JSONArray r = race.getJSONArray("Results");
 
         Circuit circuit = new Circuit(c.getString("circuitId"), c.getString("circuitName"), c.getJSONObject("Location").getString("country"));
@@ -77,7 +77,7 @@ public class Race {
                             result.getString("number"),
                             result.getString("position"),
                             result.getString("points"),
-                            Driver.getDriver(apiHost, result.getJSONObject("driver").getString("driverId")),
+                            Driver.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId")),
                             result.getString("status")
                     )
             );
