@@ -1,5 +1,6 @@
 package driver;
 
+import circuit.Circuit;
 import race.Race;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -7,6 +8,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import result.Result;
 
 import java.util.ArrayList;
 
@@ -46,7 +48,50 @@ public class Driver {
         return nationality;
     }
 
-    public ArrayList<Race> getDrivenRaces() {
+    public ArrayList<Race> getDrivenRaces() throws UnirestException {
+        if(drivenRaces == null) {
+            drivenRaces = new ArrayList<>();
+
+            String query = String.format("drivers/" + driverId + "/results.json", "UTF-8");
+            HttpResponse<JsonNode> response = Unirest.get("http://ergast.com/api/f1/" + query).asJson();
+
+            JSONObject json = response.getBody().getObject();
+
+            JSONArray races = json.getJSONObject("MRData").getJSONObject("RaceTable").getJSONArray("Races");
+
+            for(int i = 0; i < races.length(); i++) {
+                JSONObject race = races.getJSONObject(i);
+                JSONObject c = race.getJSONObject("Circuit");
+                JSONArray r = race.getJSONArray("Results");
+
+                Circuit circuit = new Circuit(c.getString("circuitId"), c.getString("circuitName"), c.getJSONObject("Location").getString("country"));
+
+                ArrayList<Result> results = new ArrayList<>();
+
+                for (int j = 0; j < r.length(); j++) {
+                    JSONObject result = r.getJSONObject(j);
+                    results.add(
+                            new Result(
+                                    result.getString("number"),
+                                    result.getString("position"),
+                                    result.getString("points"),
+                                    this,
+                                    result.getString("status")
+                            )
+                    );
+                }
+
+                drivenRaces.add(new Race(
+                        race.getInt("season"),
+                        race.getInt("round"),
+                        circuit,
+                        race.getString("date"),
+                        null,
+                        results
+                ));
+            }
+        }
+
         return drivenRaces;
     }
 

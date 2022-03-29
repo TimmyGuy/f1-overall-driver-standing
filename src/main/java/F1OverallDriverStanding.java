@@ -19,6 +19,7 @@ public class F1OverallDriverStanding {
             switch (choice) {
                 case 1 -> driverInformation();
                 case 2 -> raceInformation();
+                case 3 -> driverCompare();
                 case 4 -> raceCompare();
                 case 5 -> System.exit(0);
             }
@@ -109,12 +110,61 @@ public class F1OverallDriverStanding {
         main(new String[]{});
     }
 
+    private static void driverCompare() throws UnirestException {
+        System.out.println("Typ het driverId van de eerste coureur in");
+        String driverIdOne = scanner.next();
+        System.out.println("Typ het driverId van de tweede coureur in");
+        String driverIdTwo = scanner.next();
+        Driver driver1 = Driver.getDriver(apiHost, driverIdOne);
+        Driver driver2 = Driver.getDriver(apiHost, driverIdTwo);
+
+        if(driver1 != null && driver2 != null) {
+            CommandLineTable table = new CommandLineTable();
+            table.setShowVerticalLines(true);
+            table.setHeaders("", "", "");
+            table.addRow("Naam", driver1.getFamilyName() + ", " + driver1.getGivenName(), driver2.getFamilyName() + ", " + driver2.getGivenName());
+            table.addRow("Geboortedatum", driver1.getDateOfBirth(), driver2.getDateOfBirth());
+            table.addRow("Nationaliteit", driver1.getNationality(), driver2.getNationality());
+            table.addRow("Gereden races", "", "");
+            int itt = Math.min(driver1.getDrivenRaces().size(), driver2.getDrivenRaces().size());
+            for (int i = 0; i < itt; i++) {
+                table.addRow(
+                        "",
+                        driver1.getDrivenRaces().get(i).getDate() + " " + driver1.getDrivenRaces().get(i).getCircuit().getCircuitName() + " (" + driver1.getDrivenRaces().get(i).getResults().get(0).getPosition() + "e)",
+                        driver2.getDrivenRaces().get(i).getDate() + " " + driver2.getDrivenRaces().get(i).getCircuit().getCircuitName() + " (" + driver2.getDrivenRaces().get(i).getResults().get(0).getPosition() + "e)"
+                );
+            }
+            table.print();
+        } else {
+            System.out.println("Er kon geen driver gevonden worden met deze gegevens");
+        }
+        main(new String[]{});
+
+    }
+
     private static void driverInformation() throws UnirestException {
         System.out.println("Typ het driverId in");
 
         String driverId = scanner.next();
         Driver driver = Driver.getDriver(apiHost, driverId);
-        System.out.println(driver);
+
+        if(driver != null) {
+            CommandLineTable table = new CommandLineTable();
+            table.setShowVerticalLines(true);
+            table.setHeaders("", "");
+            table.addRow("Naam", driver.getFamilyName() + ", " + driver.getGivenName());
+            table.addRow("Geboortedatum", driver.getDateOfBirth());
+            table.addRow("Nationaliteit", driver.getNationality());
+            table.addRow("Gereden races", "");
+            for(Race race : driver.getDrivenRaces()) {
+                table.addRow("", race.getDate() + " " + race.getCircuit().getCircuitName() + " (" + race.getResults().get(0).getPosition() + "e)");
+            }
+            table.print();
+        } else {
+            System.out.println("De coureur is niet gevonden");
+        }
+        main(new String[]{});
+
     }
 
     static int mainMenu() {
