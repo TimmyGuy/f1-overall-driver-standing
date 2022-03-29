@@ -22,4 +22,13 @@ public class Circuit {
     public String getCountry() {
         return country;
     }
+
+    @Override
+    public String toString() {
+        return "Circuit{" +
+                "circuitId='" + circuitId + '\'' +
+                ", circuitName='" + circuitName + '\'' +
+                ", country='" + country + '\'' +
+                '}';
+    }
 }

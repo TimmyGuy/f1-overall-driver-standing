@@ -90,6 +90,17 @@ public class Race {
                 race.getString("date"),
                 race.getString("time"),
                 results
-                );
+        );
+    }
+
+    @Override
+    public String toString() {
+        return "Race{" +
+                "season=" + season +
+                ", round=" + round +
+                ", circuit=" + circuit +
+                ", date='" + date + '\'' +
+                ", time='" + time + '\'' +
+                '}';
     }
 }
