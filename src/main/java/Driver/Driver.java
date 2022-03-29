@@ -5,16 +5,17 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class Driver {
-    private String driverId;
-    private String givenName;
-    private String familyName;
-    private String dateOfBirth;
-    private String nationality;
+    private final String driverId;
+    private final String givenName;
+    private final String familyName;
+    private final String dateOfBirth;
+    private final String nationality;
     private ArrayList<Race> drivenRaces;
 
     public Driver(String driverId, String givenName, String familyName, String dateOfBirth, String nationality) {
@@ -54,10 +55,30 @@ public class Driver {
         HttpResponse<JsonNode> response = Unirest.get(apiHost + query).asJson();
 
         JSONObject json = response.getBody().getObject();
-        JSONObject driver = json.getJSONObject("Drivers");
+        JSONArray drivers = json.getJSONObject("MRData").getJSONObject("DriverTable").getJSONArray("Drivers");
 
-        System.out.println(response.getBody());
+        if(drivers.length() == 0) {
+            return null;
+        }
+        JSONObject driver = drivers.getJSONObject(0);
+        return new Driver(
+                driver.getString("driverId"),
+                driver.getString("givenName"),
+                driver.getString("familyName"),
+                driver.getString("dateOfBirth"),
+                driver.getString("nationality")
+        );
+    }
 
-        return null;
+    @Override
+    public String toString() {
+        return "Driver{" +
+                "driverId='" + driverId + '\'' +
+                ", givenName='" + givenName + '\'' +
+                ", familyName='" + familyName + '\'' +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", drivenRaces=" + drivenRaces +
+                '}';
     }
 }
