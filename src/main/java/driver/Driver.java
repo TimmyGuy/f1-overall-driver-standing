@@ -14,11 +14,11 @@ import java.util.ArrayList;
 
 public class Driver {
     private final String driverId;
-    private final String givenName;
-    private final String familyName;
-    private final String dateOfBirth;
-    private final String nationality;
-    private ArrayList<Race> drivenRaces;
+    protected final String givenName;
+    protected final String familyName;
+    protected final String dateOfBirth;
+    protected final String nationality;
+    protected ArrayList<Race> drivenRaces;
 
     public Driver(String driverId, String givenName, String familyName, String dateOfBirth, String nationality) {
         this.driverId = driverId;

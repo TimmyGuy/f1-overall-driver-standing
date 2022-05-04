@@ -2,6 +2,7 @@ package race;
 
 import circuit.Circuit;
 import driver.Driver;
+import driver.Winner;
 import result.Result;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -72,12 +73,21 @@ public class Race {
 
         for (int i = 0; i < r.length(); i++) {
             JSONObject result = r.getJSONObject(i);
+            String position = result.getString("position");
+
+            Driver driver;
+            if (position.equals("1")) {
+                driver = Winner.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId"));
+            } else {
+                driver = Driver.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId"));
+            }
+
             results.add(
                     new Result(
                             result.getString("number"),
                             result.getString("position"),
                             result.getString("points"),
-                            Driver.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId")),
+                            driver,
                             result.getString("status")
                     )
             );
