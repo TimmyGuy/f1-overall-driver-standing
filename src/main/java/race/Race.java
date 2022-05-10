@@ -1,8 +1,7 @@
 package race;
 
 import circuit.Circuit;
-import driver.Driver;
-import driver.Winner;
+import driver.*;
 import result.Result;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -73,13 +72,20 @@ public class Race {
 
         for (int i = 0; i < r.length(); i++) {
             JSONObject result = r.getJSONObject(i);
-            String position = result.getString("position");
+            String status = result.getString("status");
 
             Driver driver;
-            if (position.equals("1")) {
-                driver = Winner.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId"));
+
+            if(status.equals("Suspension") || status.equals("Collision")) {
+                driver = Fallout.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId"));
             } else {
-                driver = Driver.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId"));
+                String position = result.getString("position");
+                driver = switch (position) {
+                    case "1" -> Winner.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId"));
+                    case "2" -> SecondPlace.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId"));
+                    case "3" -> ThirdPlace.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId"));
+                    default -> Driver.getDriver(apiHost, result.getJSONObject("Driver").getString("driverId"));
+                };
             }
 
             results.add(

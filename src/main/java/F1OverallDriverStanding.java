@@ -93,14 +93,38 @@ public class F1OverallDriverStanding {
 
             CommandLineTable table = new CommandLineTable();
             table.setShowVerticalLines(true);
-            table.setHeaders("", "");
-            table.addRow("Seizoen", String.format("%d", race.getSeason()));
-            table.addRow("Ronde", String.format("%d", race.getRound()));
-            table.addRow("Circuit", race.getCircuit().getCircuitName() + " (" + race.getCircuit().getCountry() + ")");
-            table.addRow("Datum", race.getDate() + " " + race.getTime());
-            table.addRow("Resultaten", "");
+            table.setHeaders("", "", "Prijzen");
+            table.addRow(
+                    "Seizoen",
+                    String.format("%d", race.getSeason()),
+                    ""
+            );
+            table.addRow(
+                    "Ronde",
+                    String.format("%d", race.getRound()),
+                    ""
+            );
+            table.addRow(
+                    "Circuit",
+                    race.getCircuit().getCircuitName() + " (" + race.getCircuit().getCountry() + ")",
+                    ""
+            );
+            table.addRow(
+                    "Datum",
+                    race.getDate() + " " + race.getTime(),
+                    ""
+            );
+            table.addRow(
+                    "Resultaten",
+                    "",
+                    ""
+            );
             for (Result result : race.getResults()) {
-                table.addRow("", result.getPosition() + ". " + result.getDriver().getFamilyName() + ", " + result.getDriver().getGivenName() + " (" + result.getStatus() + ")");
+                table.addRow(
+                        "",
+                        result.getPosition() + ". " + result.getDriver().getFamilyName() + ", " + result.getDriver().getGivenName() + " (" + result.getStatus() + ")",
+                        result.getDriver().getPrice()
+                );
             }
             table.print();
         } else {
@@ -122,8 +146,11 @@ public class F1OverallDriverStanding {
             CommandLineTable table = new CommandLineTable();
             table.setShowVerticalLines(true);
             table.setHeaders("", "", "");
-            table.addRow("Naam", driver1.getFamilyName() + ", " + driver1.getGivenName(), driver2.getFamilyName() + ", " + driver2.getGivenName());
-            table.addRow("Geboortedatum", driver1.getDateOfBirth(), driver2.getDateOfBirth());
+            table.addRow(
+                    "Naam",
+                    driver1.getFamilyName() + ", " + driver1.getGivenName(), driver2.getFamilyName() + ", " + driver2.getGivenName());
+            table.addRow(
+                    "Geboortedatum", driver1.getDateOfBirth(), driver2.getDateOfBirth());
             table.addRow("Nationaliteit", driver1.getNationality(), driver2.getNationality());
             table.addRow("Gereden races", "", "");
             int itt = Math.min(driver1.getDrivenRaces().size(), driver2.getDrivenRaces().size());

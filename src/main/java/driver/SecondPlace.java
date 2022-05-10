@@ -7,26 +7,21 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class Winner extends Driver {
-    public Winner(String driverId, String givenName, String familyName, String dateOfBirth, String nationality) {
+public class SecondPlace extends Driver{
+    public SecondPlace(String driverId, String givenName, String familyName, String dateOfBirth, String nationality) {
         super(driverId, givenName, familyName, dateOfBirth, nationality);
     }
 
     @Override
-    public String getGivenName() {
-        return "**" + this.givenName + "**";
-    }
-
-    @Override
     public String getPrice() {
-        return "Goud & 100.000 EUR";
+        return "Zilver & 50.000 EUR";
     }
 
-    public static Winner getDriver(String apiHost, String driverId) throws UnirestException {
+    public static SecondPlace getDriver(String apiHost, String driverId) throws UnirestException {
         JSONArray drivers = getDriversArray(apiHost, driverId);
         if (drivers == null) return null;
         JSONObject driver = drivers.getJSONObject(0);
-        return new Winner(
+        return new SecondPlace(
                 driver.getString("driverId"),
                 driver.getString("givenName"),
                 driver.getString("familyName"),

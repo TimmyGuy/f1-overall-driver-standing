@@ -96,6 +96,19 @@ public class Driver {
     }
 
     public static Driver getDriver(String apiHost, String driverId) throws UnirestException {
+        JSONArray drivers = getDriversArray(apiHost, driverId);
+        if (drivers == null) return null;
+        JSONObject driver = drivers.getJSONObject(0);
+        return new Driver(
+                driver.getString("driverId"),
+                driver.getString("givenName"),
+                driver.getString("familyName"),
+                driver.getString("dateOfBirth"),
+                driver.getString("nationality")
+        );
+    }
+
+    protected static JSONArray getDriversArray(String apiHost, String driverId) throws UnirestException {
         String query = String.format("drivers/" + driverId + ".json", "UTF-8");
         HttpResponse<JsonNode> response = Unirest.get(apiHost + query).asJson();
 
@@ -105,14 +118,11 @@ public class Driver {
         if(drivers.length() == 0) {
             return null;
         }
-        JSONObject driver = drivers.getJSONObject(0);
-        return new Driver(
-                driver.getString("driverId"),
-                driver.getString("givenName"),
-                driver.getString("familyName"),
-                driver.getString("dateOfBirth"),
-                driver.getString("nationality")
-        );
+        return drivers;
+    }
+
+    public String getPrice() {
+        return "Deelname trofee";
     }
 
     @Override
